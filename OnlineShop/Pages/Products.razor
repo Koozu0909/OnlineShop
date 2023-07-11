@@ -4,6 +4,7 @@
 @if(Products == null)
 {
     <h3>Loading products.....</h3>
+    <DisplayLoading/>
 }
 else
 {
@@ -13,16 +14,15 @@ else
 
     @if (productCount > 0)
     {
-        const int itemsPerRow = 4;
-        var productsList = new List<ProductDTO>();
-
-        @for(int i = 0; i < productCount; i++)
+        @foreach(var proGroup in GetGroupProductsByCategory())
         {
-            productsList = Products.Skip(i * itemsPerRow).Take(itemsPerRow).ToList();
+            <h4>@GetCategoryName(proGroup)</h4>
 
             <div class= "row mt-3">
-              <DisplayProducts Products="@productsList"></DisplayProducts>
+              <DisplayProducts Products="@proGroup.Take(4)"></DisplayProducts>
             </div>
+            <hr class="mb-3" />
+            
         }
     }
 }

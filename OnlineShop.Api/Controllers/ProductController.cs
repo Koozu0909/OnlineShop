@@ -24,7 +24,8 @@ namespace OnlineShop.Api.Controllers
             {
                 var products = await this.productRepository.GetItem();
                 var productCategories = await this.productRepository.GetCategories();
-                if(products == null || productCategories == null)  {
+                if (products == null || productCategories == null)
+                {
                     return NotFound();
                 }
                 else
@@ -37,6 +38,35 @@ namespace OnlineShop.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error");
             }
+
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductDTO>> GetItem(int id)
+        {
+            try
+            {
+                var product = await this.productRepository.GetItem(id);
+                if (product == null )
+                {
+                    return BadRequest();
+                }
+                else
+                {   
+                    var productCategory =  await this.productRepository.GetCategory(product.CategoryId);
+                    var productDTO = product.ConvertToDTO(productCategory);
+                    return Ok(productDTO);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error");
+            }
+        }
+
+
+
+
+
     }
 }
